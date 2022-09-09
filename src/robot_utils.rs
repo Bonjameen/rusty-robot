@@ -28,7 +28,7 @@ pub struct Movement {
     delta_angle: i16,
 }
 
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy)]
 pub enum Direction {
     NORTH = 0,
     EAST = 90,
