@@ -58,7 +58,7 @@ pub union ArgValue {
     pub direction: Direction,
 }
 
-enum Arg {
+pub enum Arg {
     Int(ArgValue),
     Direction(ArgValue),
 }
@@ -75,6 +75,19 @@ impl fmt::Debug for Arg {
                     let direction = val.direction;
                     write!(f, "{direction:?}")
                 }
+            }
+        }
+    }
+}
+
+impl PartialEq for Arg {
+    fn eq(&self, other: &Self) -> bool {
+        unsafe {
+            match (self, other) {
+                (Self::Int(l0), Self::Int(r0)) => l0.co_ord == r0.co_ord,
+                (Self::Direction(l0), Self::Direction(r0)) => l0.direction == r0.direction,
+                (Self::Direction(_), Self::Int(_)) => return false,
+                (Self::Int(_), Self::Direction(_)) => return false,
             }
         }
     }

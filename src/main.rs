@@ -11,12 +11,12 @@ mod utils;
 
 fn main() {
     let mut user_input = String::new();
-    let mut instruction_result = Ok(None);
+    let mut instruction_result = Err("Instruction result not set".to_string());
     match stdin().read_line(&mut user_input) {
         Ok(_) => {
-            let mut input_vecd = byte_slice_to_vecdeque(user_input[..].as_bytes());
+            let mut input_vecd = byte_slice_to_vecdeque(user_input.to_uppercase()[..].as_bytes());
             input_vecd.pop_back();
-            instruction_result = parse_input(input_vecd)
+            instruction_result = parse_input(input_vecd);
         }
         Err(error) => eprintln!("error: {error}"),
     }
