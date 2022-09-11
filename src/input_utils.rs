@@ -1,6 +1,6 @@
 use std::{fmt, str::FromStr};
 
-use crate::robot_utils::Direction;
+use crate::robot_utils::{Direction, Movement, Orientation, PosVector};
 
 #[derive(PartialEq, Eq, Debug)]
 pub enum InstructionType {
@@ -51,8 +51,31 @@ impl Instruction {
             args: [None, None, None],
         }
     }
+
+    pub fn to_delta(self, current_orientation: &Orientation) -> Movement {
+        let mut movement = Movement::new();
+        match self.instruction_type {
+            Some(InstructionType::MOVE) => {
+                movement.delta_pos = self.calculate_move_vector(&current_orientation.direction)
+            }
+            Some(InstructionType::LEFT) => movement.delta_angle = 270,
+            Some(InstructionType::RIGHT) => movement.delta_angle = 90,
+            _ => {}
+        }
+        movement
+    }
+
+    fn calculate_move_vector(&self, current_direction: &Direction) -> PosVector {
+        match current_direction {
+            Direction::NORTH => return PosVector { x: 0, y: 1 },
+            Direction::EAST => return PosVector { x: 1, y: 0 },
+            Direction::SOUTH => return PosVector { x: 0, y: -1 },
+            Direction::WEST => return PosVector { x: -1, y: 0 },
+        }
+    }
 }
 
+#[repr(C)]
 pub union ArgValue {
     pub co_ord: i8,
     pub direction: Direction,

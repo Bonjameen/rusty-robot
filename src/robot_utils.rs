@@ -1,8 +1,11 @@
-use std::str::FromStr;
+use core::fmt;
+use std::{ops::AddAssign, str::FromStr};
+
+use num_derive::FromPrimitive;
 
 pub struct Orientation {
-    position: PosVector,
-    direction: Direction,
+    pub position: PosVector,
+    pub direction: Direction,
 }
 
 impl Orientation {
@@ -14,9 +17,23 @@ impl Orientation {
     }
 }
 
+pub struct Movement {
+    pub delta_pos: PosVector,
+    pub delta_angle: i16,
+}
+
+impl Movement {
+    pub fn new() -> Self {
+        Movement {
+            delta_pos: PosVector::new(),
+            delta_angle: 0,
+        }
+    }
+}
+
 pub struct PosVector {
-    x: i8,
-    y: i8,
+    pub x: i8,
+    pub y: i8,
 }
 
 impl PosVector {
@@ -25,12 +42,14 @@ impl PosVector {
     }
 }
 
-pub struct Movement {
-    delta_pos: PosVector,
-    delta_angle: i16,
+impl AddAssign for PosVector {
+    fn add_assign(&mut self, rhs: Self) {
+        self.x += rhs.x;
+        self.y += rhs.y;
+    }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, FromPrimitive)]
 pub enum Direction {
     NORTH = 0,
     EAST = 90,
@@ -48,6 +67,17 @@ impl FromStr for Direction {
             "SOUTH" => return Ok(Direction::SOUTH),
             "WEST" => return Ok(Direction::WEST),
             _ => Err("Invalid direction passed in".to_string()),
+        }
+    }
+}
+
+impl fmt::Display for Direction {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Direction::NORTH => write!(f, "NORTH"),
+            Direction::EAST => write!(f, "EAST"),
+            Direction::SOUTH => write!(f, "SOUTH"),
+            Direction::WEST => write!(f, "WEST"),
         }
     }
 }
