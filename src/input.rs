@@ -17,8 +17,6 @@ pub fn parse_input(mut user_input: VecDeque<u8>) -> Result<Instruction, String> 
             Err(error) => return Err(error),
         }
     }
-
-    println!("{instruction:?}");
     Ok(instruction)
 }
 

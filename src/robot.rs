@@ -58,15 +58,6 @@ impl ToyRobot {
 
     fn execute_movement(&mut self, delta: Movement) {
         self.orientation.position += delta.delta_pos;
-        println!("direction num {}", self.orientation.direction as i16);
-        println!(
-            "new direction num {}",
-            self.orientation.direction as i16 + delta.delta_angle
-        );
-        println!(
-            "new direction num mod {}",
-            (self.orientation.direction as i16 + delta.delta_angle) % 360
-        );
         match FromPrimitive::from_i16(
             ((self.orientation.direction as i16) + delta.delta_angle) % 360,
         ) {
